@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Circular Menu</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2971751_ja3a6si3vom.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #8460ed, #ff1252);
+        }
+
+        .menu {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .menu span {
+            position: absolute;
+            transform-origin: 150px;
+            left: 0;
+            transition: 0.5s;
+            transition-delay: calc(0.1s * var(--i));
+            transform: rotate(0deg) translateX(120px);
+
+        }
+        .menu span a{
+            color: #111;
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transform: rotate(calc(360deg / -8 * var(--i)));
+            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
+            transition: 0.5s;
+        }
+
+        .menu span a:hover i{
+            font-size: 1.8em;
+            color: #f00;
+            transition: 0.3s ;
+        }
+        .menu span a i{
+            font-size: 1.5em;
+            transition: 0.3s ;
+        }
+        .menu.active span {
+            transform: rotate(calc(360deg / 8 * var(--i)));
+        }
+
+        .toggle {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
+
+            transition: 1.5s;
+        }
+        .toggle i{
+            font-size: 2em;
+        }
+
+        .menu.active .toggle {
+            transform: rotate(315deg);
+        }
+    </style>
+</head>
+<body>
+<div class="menu">
+    <div class="toggle"><i class="iconfont icon-close"></i></div>
+    <span style="--i:0;"><a href="#"><i class="iconfont icon-home"></i></a></span>
+    <span style="--i:1;"><a href="#"><i class="iconfont icon-user"></i></a></span>
+    <span style="--i:2;"><a href="#"><i class="iconfont icon-setting"></i></a></span>
+    <span style="--i:3;"><a href="#"><i class="iconfont icon-email"></i></a></span>
+    <span style="--i:4;"><a href="#"><i class="iconfont icon-key"></i></a></span>
+    <span style="--i:5;"><a href="#"><i class="iconfont icon-video"></i></a></span>
+    <span style="--i:6;"><a href="#"><i class="iconfont icon-game-controller-outline"></i></a></span>
+    <span style="--i:7;"><a href="#"><i class="iconfont icon-camera"></i></a></span>
+</div>
+<script>
+    let toggle = document.querySelector('.toggle')
+    let menu = document.querySelector('.menu')
+    toggle.onclick = function () {
+        menu.classList.toggle('active')
+    }
+</script>
+</body>
+</html>
