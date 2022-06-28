@@ -12,8 +12,9 @@ export default defineConfig({
     },
   },
   base: "martin",
-  define: {},
+  // define: {},
   build: {
     outDir: "deploy",
+    assetsDir: "./",
   },
 });
