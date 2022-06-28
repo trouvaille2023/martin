@@ -15,6 +15,6 @@ export default defineConfig({
   // define: {},
   build: {
     outDir: "deploy",
-    // assetsDir: "./",
+    assetsDir: "assets",
   },
 });
