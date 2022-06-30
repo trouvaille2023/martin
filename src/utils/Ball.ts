@@ -42,6 +42,14 @@ export class Ball {
     this.ySpeed = getRandom(speedK) + speedK;
   }
 
+  /**
+   *
+   * @param context
+   * @param lineWidth
+   * @param startAngle
+   * @param endAngle
+   * @param anticlockwise
+   */
   public drawBall({
     context,
     lineWidth = 3,
@@ -68,6 +76,11 @@ export class Ball {
     context.fill();
     return this;
   }
+
+  /**
+   *
+   * @param kill
+   */
   public run({ kill = false }: { kill?: boolean }): Ball {
     if (kill) {
       this.r--;
