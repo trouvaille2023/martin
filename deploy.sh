@@ -2,6 +2,9 @@
 
 git add deploy
 
+git commit -m "deploy" && git push
+
+
 git push origin --delete gh-pages
 
 git branch -d gh-pages
