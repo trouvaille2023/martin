@@ -26,93 +26,114 @@
 
 <body>
 
-    <canvas id="canvas">当前浏览器不支持canvas,请更换浏览器后再试</canvas>
-    <script>
+<canvas id="canvas">当前浏览器不支持canvas,请更换浏览器后再试</canvas>
+<script>
 
 
-        const speedK = 1
-        const ballCount = 10000
+    const speedK = 1
+    const ballCount = 10
+    const ballArr = []
+    const width = document.body.clientWidth
+    const height = document.body.clientHeight
 
 
+    function getRandom(x) {
+        return parseInt(Math.random() * x)
+    }
 
-        function getRandom(x) {
-            return parseInt(Math.random() * x)
-        }
+    function Ball(width, height, r, x, y) {
+        this.width = width
+        this.height = height
+        this.r = r || getRandom(30) + 10
+        this.x = x || getRandom(width - this.r * 2)
+        this.y = y || getRandom(height - this.r * 2)
+        this.fillStyle = `rgb(${getRandom(255)},${getRandom(255)},${getRandom(255)})`
+        this.xSpeed = getRandom(speedK) + speedK
+        this.ySpeed = getRandom(speedK) + speedK
 
-        function Ball(width, height) {
-            this.width = width
-            this.height = height
-            this.r = getRandom(30) + 10
-            this.x = getRandom(width - this.r * 2)
-            this.y = getRandom(height - this.r * 2)
-            this.fillStyle = `rgb(${getRandom(255)},${getRandom(255)},${getRandom(255)})`
-            this.xSpeed = getRandom(speedK) + speedK
-            this.ySpeed = getRandom(speedK) + speedK
-
-        }
-
-
-        Ball.prototype.drawBall = function (context) {
-
-            context.lineWidth = 3
-            context.fillStyle = this.fillStyle
-            context.arc(this.x + this.r, this.y + this.r, this.r, 0, Math.PI * 2, true)
-            context.fill()
-            return this
-        }
-
-        Ball.prototype.run = function () {
-            this.x += this.xSpeed
-            this.y += this.ySpeed
-
-            if (this.x >= this.width - (this.r * 2) || this.x <= 0) {
-                this.xSpeed = -this.xSpeed
-
-            }
-            if (this.y >= this.height - (this.r * 2) || this.y <= 0) {
-                this.ySpeed = -this.ySpeed
-            }
+    }
 
 
+    Ball.prototype.drawBall = function (context) {
+
+        context.lineWidth = 3
+        context.fillStyle = this.fillStyle
+        context.arc(this.x + this.r, this.y + this.r, this.r, 0, Math.PI * 2, true)
+        context.fill()
+        return this
+    }
+
+    Ball.prototype.run = function () {
+        this.x += this.xSpeed
+        this.y += this.ySpeed
+
+        if (this.x >= this.width - (this.r * 2) || this.x <= 0) {
+            this.xSpeed = -this.xSpeed
 
         }
-        startGame = function () {
-            let width = document.body.clientWidth
-            let height = document.body.clientHeight
-            const ballArr = []
-            const canvas = document.querySelector('#canvas')
-            canvas.width = width
-            canvas.height = height
-            const context = canvas.getContext('2d')
+        if (this.y >= this.height - (this.r * 2) || this.y <= 0) {
+            this.ySpeed = -this.ySpeed
+        }
 
-            for (let i = 0; i < ballCount; i++) {
-                ball = new Ball(width, height)
-                if (i % 2 === 0) {
-                    ball.xSpeed = -ball.xSpeed
-                }
-                if (i % 3 === 0) {
-                    ball.ySpeed = -ball.ySpeed
-                }
+
+    }
+    Ball.prototype.runClear = function () {
+        this.r--
+    }
+    startGame = function () {
+
+        const canvas = document.querySelector('#canvas')
+        canvas.width = width
+        canvas.height = height
+        const context = canvas.getContext('2d')
+        // createBallAndMove(context)
+        onMouseMoveCreateBall(context)
+
+        setInterval(() => {
+            context.clearRect(0, 0, width, height)
+            for (let i = 0; i < ballArr.length; i++) {
                 context.beginPath()
-                ball.drawBall(context)
-                ballArr.push(ball)
+                const ball = ballArr[i];
+                if (ball.r <= 0) {
+                    ballArr.splice(i, 1)
+                } else {
 
-            }
-
-            setInterval(() => {
-                context.clearRect(0, 0, width, height)
-                for (let i = 0; i < ballArr.length; i++) {
-                    context.beginPath()
-                    const ball = ballArr[i];
-                    ball.drawBall(context).run()
+                    ball.drawBall(context).runClear()
                 }
-            }, 5);
+            }
+        }, 10);
+
+    }
+
+    function createBallAndMove(context) {
+        for (let i = 0; i < ballCount; i++) {
+            const ball = new Ball(width, height)
+            if (i % 2 === 0) {
+                ball.xSpeed = -ball.xSpeed
+            }
+            if (i % 3 === 0) {
+                ball.ySpeed = -ball.ySpeed
+            }
+            context.beginPath()
+            ball.drawBall(context)
+            ballArr.push(ball)
 
         }
+    }
 
-        startGame()
+    const onMouseMoveCreateBall=(context)=> {
+        window.onmousemove = function (e) {
+            console.log(e)
+            const ball = new Ball(width, height, 30, e.x - 30, e.y - 30)
+            context.beginPath()
+            ball.drawBall(context)
+            ballArr.push(ball)
+        }
+    }
 
-    </script>
+    startGame()
+
+</script>
 </body>
 
 </html>
