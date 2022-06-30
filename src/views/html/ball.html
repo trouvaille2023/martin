@@ -123,7 +123,6 @@
 
     const onMouseMoveCreateBall=(context)=> {
         window.onmousemove = function (e) {
-            console.log(e)
             const ball = new Ball(width, height, 30, e.x - 30, e.y - 30)
             context.beginPath()
             ball.drawBall(context)

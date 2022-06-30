@@ -1,58 +1,74 @@
-<script lang="ts">
-import { Ball } from "@/utils/Ball";
-export default {
-  data() {},
-  mounted() {
-    const canvas: HTMLCanvasElement = <HTMLCanvasElement>(
-      document.getElementById("mainCanvas")
-    );
-    const context: CanvasRenderingContext2D = <CanvasRenderingContext2D>(
-      canvas.getContext("2d")
-    );
+<script lang="ts" setup>
+import {Ball} from "@/utils/Ball";
+import {onBeforeUnmount, onMounted} from "vue";
 
-    const speedK = 1;
-    const ballCount = 10;
-    const width = document.body.clientWidth;
-    const height = document.body.clientHeight;
-    const ballArr: Ball[] = [];
-    let interVal: number;
+const speedK = 1;
+const ballCount = 10;
+const ballArr: Ball[] = [];
+let width: number = 0;
+let height: number = 0;
+let interVal: number = 0
 
-    // window.onmousemove = function () {
-    if (ballArr.length <= ballCount) {
-      let ball = new Ball({ width, height, speedK, r: 10 });
-      context.beginPath();
-      ballArr.push(ball);
-      ball.drawBall({ context }).run({});
+function createBallAndMove(context: CanvasRenderingContext2D): void {
+  for (let i = 0; i < ballCount; i++) {
+    const ball = new Ball({
+      width,
+      height,
+      speedK,
+      r: 30,
+      x: 0,
+      y: 0,
+      isStatic: true,
+    });
+    if (i % 2 === 0) {
+      ball.xSpeed = -ball.xSpeed;
     }
-    // };
+    if (i % 3 === 0) {
+      ball.ySpeed = -ball.ySpeed;
+    }
+    context.beginPath();
+    ball.drawBall({context});
+    ballArr.push(ball);
+  }
+}
 
-    /*interVal = setInterval(() => {
-      context.clearRect(0, 0, width, height);
-      for (let i = 0, len = ballArr.length; i < len; i++) {
-        context.beginPath();
-        var ball = ballArr[i];
-        console.log(ballArr);
-        if (ball) {
-          ball
-            .drawBall({
-              anticlockwise: false,
-              endAngle: 0,
-              lineWidth: 0,
-              startAngle: 0,
-              context,
-            })
-            .run({ kill: false });
-        }
-        // if (ball && ball.r <= 0) {
-        //   ballArr.splice(i, 1);
-        // }
-        // if (ballArr.length <= 0) {
-        //   clearInterval(interVal);
-        // }
-      }
-    }, 100);*/
-  },
+const onMouseMoveCreateBall = (context: CanvasRenderingContext2D) => {
+  window.onmousemove = function (event: MouseEvent) {
+    const ball = new Ball({width, height, speedK: speedK, r: 30, x: event.x - 30, y: event.y - 30, isStatic: true});
+    context.beginPath();
+    ball.drawBall({context});
+    ballArr.push(ball);
+  };
 };
+onMounted(() => {
+
+  const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector("#mainCanvas");
+  width = document.body.clientWidth
+  height = document.body.clientHeight
+  canvas.width = width;
+  canvas.height = height;
+  const context: CanvasRenderingContext2D = <CanvasRenderingContext2D>canvas.getContext("2d");
+
+  onMouseMoveCreateBall(context);
+
+  interVal = setInterval(function () {
+    context.clearRect(0, 0, width, height)
+
+    for (let i = 0; i < ballArr.length; i++) {
+      context.beginPath();
+      const ball = ballArr[i];
+      if (ball.r <= 0) {
+        ballArr.splice(i, 1);
+      } else {
+        ball.drawBall({context}).run({kill: true});
+      }
+    }
+  }, 10);
+  onBeforeUnmount(() => {
+    clearInterval(interVal)
+  })
+})
+
 </script>
 
 <template>
@@ -83,6 +99,7 @@ export default {
   width: 100vw;
   height: 100vh;
 }
+
 main {
   display: grid;
   justify-content: center;
@@ -106,6 +123,7 @@ main {
       text-align: center;
       overflow: hidden;
       border: 1px solid #ffffee61;
+
       span {
         transition: all 0.3s ease-in-out;
         color: #ffffeefc;
@@ -115,6 +133,7 @@ main {
         width: 100%;
         height: 100%;
       }
+
       &::before {
         content: "";
         background: var(--primary-color);
@@ -134,6 +153,7 @@ main {
         //  #ffc107
         //);
       }
+
       &::after {
         content: "";
         position: absolute;
@@ -149,9 +169,11 @@ main {
         //  transparent
         //);
       }
+
       &:hover {
         cursor: pointer;
       }
+
       &:hover span {
         font-size: 22px;
         font-weight: bolder;
