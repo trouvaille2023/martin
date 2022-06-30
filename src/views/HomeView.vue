@@ -9,6 +9,10 @@ let width: number = 0;
 let height: number = 0;
 let interVal: number = 0
 
+/**
+ *
+ * @param context
+ */
 function createBallAndMove(context: CanvasRenderingContext2D): void {
   for (let i = 0; i < ballCount; i++) {
     const ball = new Ball({
@@ -32,6 +36,10 @@ function createBallAndMove(context: CanvasRenderingContext2D): void {
   }
 }
 
+/**
+ *
+ * @param context
+ */
 const onMouseMoveCreateBall = (context: CanvasRenderingContext2D) => {
   window.onmousemove = function (event: MouseEvent) {
     const ball = new Ball({width, height, speedK: speedK, r: 30, x: event.x - 30, y: event.y - 30, isStatic: true});
