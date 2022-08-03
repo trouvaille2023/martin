@@ -20,6 +20,6 @@ export default defineConfig({
   },
   server: {
     open: "/",
-    host: "0,0,0,0",
+    host: "localhost",
   },
 });
